@@ -1,1 +1,0 @@
-alert("Bienenido a Magic Plants")
