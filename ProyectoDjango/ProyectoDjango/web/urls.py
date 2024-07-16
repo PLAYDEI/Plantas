@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
@@ -16,5 +15,12 @@ urlpatterns = [
     path('Plantas/', views.Plantas, name='Plantas'),
     path('Registro/', views.Registro, name='Registro'),
     path('Login/', views.Login, name='Login'),
+
+    #CRUD
+    path('crud/', views.crud, name='crud'),
+    path('UsuariosAdd/', views.UsuariosAdd, name='UsuariosAdd'),
     path('listadoSQL/', views.listadoSQL, name='listadoSQL'),
+    path('Usuarios_del/<str.pk>', views.Usuarios_del, name='Usuarios_del'),
+    path('Usuarios_findEdit/<str:pk>', views.Usuarios_findEdit, name='Usuarios_findEdit'),
+    path('UsuarioUpdate', views.UsuarioUpdate, name='UsuarioUpdate'),
 ]

@@ -87,26 +87,24 @@
     <img height=710px>
   </div>
     <form class="form-register">
-        <h4>Registrarse</h4>
-        <input type="text" id="ItNombre" class="controls" placeholder="Ingrese Nombre" /><br/>
-        <div id="mensaje1" class="errores">Por favor, complete este campo solo con letras</div>
-        <input type="text" id="ItApellido" class="controls" placeholder="Ingrese Apellido" /><br/>
-        <div id="mensaje2" class="errores">Por favor, complete este campo solo con letras</div>
-        <input type="email" id="ItCorreo" class="controls"id="correo" placeholder="Ingrese Correo" /><br/>
-        <div id="mensaje3" class="errores">Ingrese Correo electronico Valido</div>
-        <input type="password" id="ItContraseña" class="controls" placeholder="Ingrese Contraseña" /><br/>    
-        <div id="mensaje4" class="errores">Tiene que Contener 6 caracteres o mas</div>
-        <br>
-        <p>Estoy de acuerdo <a href="#">Terminos y Condiciones</a></p>
-        <input type="submit" id="bRegistrar" class="botons" value=" Enviar Registro">
-        <p><a href="{% url 'Login' %}">¿Ya tengo Cuenta?</a></p>
-    </form>
-    <h1>Crea una cuenta</h1>
-    <p>Registrate usando el siguiente formulario</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ user_form.as_p }}
-        <button type="submit">Registrarse</button>
+        <h4 class="aaa">Registrarse</h4>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form method="post" id="registroForm">
+            {% csrf_token %}
+            {{ form.as_p }}
+          <br>
+          <p>Estoy de acuerdo <a href="#">Terminos y Condiciones</a></p>
+          <button type="submit" class="botons">Registrarse</button>
+          <p><a href="{% url 'Login' %}">¿Ya tengo Cuenta?</a></p>
+        </form> 
     </form>
 </body>
 </html> 

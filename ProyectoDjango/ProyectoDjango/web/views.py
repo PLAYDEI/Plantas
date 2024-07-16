@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib import messages
 from .models import Usuario
 from .forms import RegistroForm, LoginForm
 
@@ -55,7 +54,7 @@ def Registro(request):
         if form.is_valid():
             form.save()
             messages.success(request, '¡Ya se registró!')  # Mensaje de éxito
-            return redirect('Accesorios')  # Redirige a la página de Accesorios o donde desees
+            return redirect('Login/')  # Redirige a la página Login o donde desees
     else:
         form = RegistroForm()
     
@@ -67,18 +66,88 @@ def Login(request):
         if form.is_valid():
             form.save()
             messages.success(request, '¡Ya se registró!')  # Mensaje de éxito
-            return redirect('Accesorios')  # Redirige a la página de Accesorios o donde desees
+            return redirect('Index/')  # Redirige a la página de Index o donde desees
     else:
         form = LoginForm()
     
     return render(request, 'web/Login.html', {'form': form})
 
 
-#Esta en duda
-def listadoSQL(request):
-    web= Usuario.objects.raw('SELECT * FROM web_usuario')
+#CRUD
+def crud(request):
+    web = Usuario.objects.all()
+    context = {"web" : web}
+    return render(request, 'web/Usuarios_lista.html', context)
+
+def listadoSQL(request, codigo):
+    web = Usuario.objects.raw('SELECT * FROM web_usuario')
     print(web)
     context={"web":web}
     return render(request, 'web/listadoSQL.html', context)
 
+def UsuariosAdd(request):
+    if request.method is not "POST":
+        web = Usuario.objects.all()
+        context={"web": web}
+        return render (request, 'web/Usuarios_add.html', context)
+    else:    
+        Nombre=request.POST["Nombre"]
+        Apellido=request.POST["Apellido"]
+        Gmail=request.POST["Gmail"]
+        Contraseña=request.POST["Contraseña"]
 
+        obj=Usuario.objects.create(Nombre=Nombre,
+                                    Apellido=Apellido,
+                                    Gmail=Gmail,
+                                    Contraseña=Contraseña)
+        obj.save()
+        context={'mensaje':"Ok, datos grabados..."}
+        return render(request, 'web/Usuarios_add.html', context)
+
+def Usuarios_del(request,pk):
+    context={}
+    try:
+        usuario = Usuario.objects.get(nombre=pk)
+
+        usuario.delete()
+        mensaje = "Bien, Datos Eliminados..."
+        web = Usuario.objects.all()
+        context = {'web' : web, 'mensaje' : mensaje}
+        return render(request, 'web/Usuarios_lista.html', context)
+    except:
+        mensaje="Error, Nombre no Existente"
+        web = Usuario.objects.all()
+        context = {'web' : web, 'mensaje' : mensaje}
+        return render(request, 'web/Usuarios_lista.html', context)
+
+def Usuarios_findEdit(request,pk):
+    if pk != "":
+        usuario=Usuario.objects.get(nombre=pk)
+        web = Usuario.objects.all()
+        context={'web' : web}
+        if usuario:
+            return render(request, 'web/Usuarios_edit.html', context)
+        else:
+            context={'mensaje': "Error, Nombre no Existente"}
+            return render(request, 'web/Usuarios_edit.html', context)
+def UsuarioUpdate (request):
+    if request.method == "POST":
+        Nombre=request.POST["Nombre"]
+        Apellido=request.POST["Apellido"]
+        Gmail=request.POST["Gmail"]
+        Contraseña=request.POST["Contraseña"]
+
+        usuario = Usuario()
+        usuario.nombre=Nombre
+        usuario.apellido=Apellido
+        usuario.gmail=Gmail
+        usuario.contraseña.Contraseña
+        usuario.save()
+
+        web = Usuario.objects.all()
+        context={'mensaje':"Ok, datos actualizados...", 'web': web}
+        return render (request, 'web/Usarios_edit.html', context)
+    else:
+        web= Usuario.objects.all() 
+        context={'web': web}
+        return render(request, 'web/Usarios_edit.html', context)
